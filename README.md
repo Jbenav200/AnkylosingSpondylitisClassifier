@@ -18,14 +18,14 @@ During the preprocessing of the data (not included in this repo) the dicom image
 The libraries used to build, train and validate the models was PyTorch, TorchVision and PyTorch Lightning.
 The user documentation can be found at:
 <ol>
-<li><a href="https://pytorch.org/docs/stable/index.html">PyTorch docs</a></li>
-<li><a href="https://pytorch.org/vision/stable/index.html">Torchvision</a> </li>
-<li><a href="https://pytorch-lightning.readthedocs.io/en/1.3.8/">Pytorch Lightning Docs</a> </li>
+<li><a href="https://pytorch.org/docs/stable/index.html" target="_blank">PyTorch docs</a></li>
+<li><a href="https://pytorch.org/vision/stable/index.html" target="_blank">Torchvision</a> </li>
+<li><a href="https://pytorch-lightning.readthedocs.io/en/1.3.8/" target="_blank">Pytorch Lightning Docs</a> </li>
 </ol>
 
 Models Used (and modified):
 <ul>
-<li><a href="https://pytorch.org/vision/stable/models/generated/torchvision.models.resnet18.html?highlight=resnet18#torchvision.models.resnet18">PyTorch ResNet18</a> </li>
-<li><a href="https://pytorch.org/vision/stable/models/generated/torchvision.models.densenet121.html#torchvision.models.densenet121">PyTorch DenseNet121</a> </li>
+<li><a href="https://pytorch.org/vision/stable/models/generated/torchvision.models.resnet18.html?highlight=resnet18#torchvision.models.resnet18" target="_blank">PyTorch ResNet18</a> </li>
+<li><a href="https://pytorch.org/vision/stable/models/generated/torchvision.models.densenet121.html#torchvision.models.densenet121" target="_blank">PyTorch DenseNet121</a> </li>
 <li><a href="SIJEnsemble.py">Ensemble model</a> </li>
 </ul>
