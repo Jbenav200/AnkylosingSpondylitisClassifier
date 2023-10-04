@@ -24,7 +24,7 @@ class SIJResNet(pl.LightningModule):
         # self.optimizer = torch.optim.SGD(self.model.parameters(), lr=0.01)
         self.loss_fn = torch.nn.BCEWithLogitsLoss()
         self.accuracy = torchmetrics.classification.Accuracy(task='binary')
-        self.save_hyperparameters()
+        # self.save_hyperparameters()
 
     def forward(self, data):
         return self.model(data)

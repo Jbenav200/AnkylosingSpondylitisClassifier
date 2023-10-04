@@ -1,6 +1,9 @@
 from torchvision import transforms
 from pytorch_lightning.callbacks import ModelCheckpoint
 import torch
+import torchmetrics
+from tqdm.notebook import tqdm
+from pytorch_lightning.loggers import TensorBoardLogger
 
 
 def set_train_and_val_transforms():
@@ -17,12 +20,26 @@ def set_train_and_val_transforms():
     return train_transforms, val_transforms
 
 
-def set_model_checkpoint():
-    return ModelCheckpoint(
+def set_model_checkpoints():
+    ensemble_callback = ModelCheckpoint(
         monitor='Val Loss',
         save_top_k=10,
         mode='min'
     )
+
+    resnet_callback = ModelCheckpoint(
+        monitor='Val Loss',
+        save_top_k=10,
+        mode='min'
+    )
+
+    densenet_callback = ModelCheckpoint(
+        monitor='Val Loss',
+        save_top_k=10,
+        mode='min'
+    )
+
+    return {'ensemble': ensemble_callback, 'resnet': resnet_callback, 'densenet': densenet_callback}
 
 
 def compare_models(model1, model2):
@@ -39,3 +56,27 @@ def compare_models(model1, model2):
         if models_differ == 0:
             print('Models match perfectly!')
 
+
+def print_model_metrics(model, model_name, device, dataset):
+    preds = []
+    labels = []
+
+    with torch.no_grad():
+        for data, label in tqdm(dataset):
+            data = data.to(device).float().unsqueeze(0)
+            pred = torch.sigmoid(model(data)[0]).cuda()
+            preds.append(pred)
+            labels.append(label)
+
+    preds = torch.tensor(preds)
+    labels = torch.tensor(labels).int()
+
+    acc = torchmetrics.Accuracy(task='binary')(preds, labels)
+    precision = torchmetrics.Precision(task='binary')(preds, labels)
+    recall = torchmetrics.Recall(task='binary')(preds, labels)
+    cm = torchmetrics.ConfusionMatrix(task='binary', num_classes=2)(preds, labels)
+
+    print(f"{model_name} Val Accuracy {acc}")
+    print(f"{model_name} Val Precision {precision}")
+    print(f"{model_name} Val Recall {recall}")
+    print(f"Confusion Matrix {cm}")

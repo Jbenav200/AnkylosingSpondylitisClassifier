@@ -22,7 +22,7 @@ class SIJDenseNet(pl.LightningModule):
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-4)
         self.loss_fn = torch.nn.BCEWithLogitsLoss()
         self.accuracy = torchmetrics.classification.Accuracy(task='binary')
-        self.save_hyperparameters()
+        # self.save_hyperparameters()
 
     def forward(self, data):
         return self.model(data)
