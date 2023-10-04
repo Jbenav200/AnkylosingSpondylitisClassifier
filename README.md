@@ -9,6 +9,10 @@ The original code was written in Jupyter and later converted to python files.
 in main.py, I have set the device to 'mps' because I am using an M1 mac.
 If you are using a cuda compatible device, you will need to change line 22 in main.py to use cuda instead of mps.
 
+### System Requirements
+Aside from the libraries imported in each of the files, you will need to have python 3.10 or higher to run this project.
+this project was developed using a conda environment, so you might want to download Anaconda and create an environment in which you can install the relevant packages.
+
 ### Data
 The dataset for this project is not publicly available. Due to the license I cannot share the data publicly.
 The format of the data in the Dataset comes in .dcm (dicom), .png and .psd formats. Of these formats, dicom was used.
