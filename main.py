@@ -6,13 +6,16 @@ from SIJEnsemble import SIJEnsemble
 from utils import set_train_and_val_transforms, set_model_checkpoint, compare_models
 import torch
 import pytorch_lightning as pl
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
-TRAIN_ROOT_PATH = Path('/path/to/train/images')
-TRAIN_SUBJECTS = Path('/path/to/train_subjects.npy')
-VAL_ROOT_PATH = Path('/path/to/val/images')
-VAL_SUBJECTS = Path('/path/to/val_subjects.npy')
-LABELS_PATH = Path('/path/to/labels.csv')
+TRAIN_ROOT_PATH = os.getenv('TRAIN_ROOT_PATH')
+TRAIN_SUBJECTS = os.getenv('TRAIN_SUBJECTS')
+VAL_ROOT_PATH = os.getenv('VAL_ROOT_PATH')
+VAL_SUBJECTS = os.getenv('VAL_SUBJECTS')
+LABELS_PATH = os.getenv('LABELS_PATH')
 
 if __name__ == '__main__':
     print('Program Started.')
