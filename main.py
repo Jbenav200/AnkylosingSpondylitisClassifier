@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Set constants
 TRAIN_ROOT_PATH = os.getenv('TRAIN_ROOT_PATH')
 TRAIN_SUBJECTS = os.getenv('TRAIN_SUBJECTS')
 VAL_ROOT_PATH = os.getenv('VAL_ROOT_PATH')
