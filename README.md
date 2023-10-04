@@ -1,5 +1,9 @@
 # Automatic Detection of Sacroiliitis in MRI using a Stacked Ensemble of Convolutional Neural Networks.
 
+## About
+This project is the code for my dissertation project for my Master's of Science (MS) in Computer Science with Artificial Intelligence at the University of Wolverhampton.
+The original code was written in Jupyter and later converted to python files.
+
 ## Setup Information
 ### Device
 in main.py, I have set the device to 'mps' because I am using an M1 mac.
