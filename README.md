@@ -16,7 +16,7 @@ this project was developed using a conda environment, so you might want to downl
 ### Data
 The dataset for this project is not publicly available. Due to the license I cannot share the data publicly.
 The format of the data in the Dataset comes in .dcm (dicom), .png and .psd formats. Of these formats, dicom was used.
-During the preprocessing of the data (not included in this repo) the dicom images were converted to numpy arrays.
+During the preprocessing of the data (not included in this repo) the dicom images were converted to NumPy arrays.
 
 ### Models and Libraries
 The libraries used to build, train and validate the models was PyTorch, TorchVision and PyTorch Lightning.
