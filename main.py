@@ -8,13 +8,11 @@ import torch
 import pytorch_lightning as pl
 
 
-TRAIN_ROOT_PATH = Path('/Users/jonty/University/Dissertation/Dissertation Paper/Data/Data/Processed/train')
-TRAIN_SUBJECTS = Path('/Users/jonty/University/Dissertation/Dissertation '
-                      'Paper/Data/Data/Processed/Processed-SIJ-Detection/train_subjects.npy')
-VAL_ROOT_PATH = Path('/Users/jonty/University/Dissertation/Dissertation Paper/Data/Data/Processed/val')
-VAL_SUBJECTS = Path('/Users/jonty/University/Dissertation/Dissertation '
-                    'Paper/Data/Data/Processed/Processed-SIJ-Detection/val_subjects.npy')
-LABELS_PATH = Path('/Users/jonty/University/Dissertation/Dissertation Paper/Data/Data/train_test.csv')
+TRAIN_ROOT_PATH = Path('/path/to/train/images')
+TRAIN_SUBJECTS = Path('/path/to/train_subjects.npy')
+VAL_ROOT_PATH = Path('/path/to/val/images')
+VAL_SUBJECTS = Path('/path/to/val_subjects.npy')
+LABELS_PATH = Path('/path/to/labels.csv')
 
 if __name__ == '__main__':
     print('Program Started.')
