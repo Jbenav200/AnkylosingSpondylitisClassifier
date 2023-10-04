@@ -33,6 +33,15 @@ class SIJResNet(pl.LightningModule):
         pred = self(mri)
         loss = torch.sigmoid(self.loss_fn(pred, label))
 
+        self.log("Train Loss", loss)
+        return loss
+
+    def validation_step(self, batch, batch_idx):
+        mri, label = batch
+        pred = self(mri)
+        loss = torch.sigmoid(self.loss_fn(pred, label))
+
+        self.log("Val Loss", loss)
         return loss
 
     def configure_optimizers(self):

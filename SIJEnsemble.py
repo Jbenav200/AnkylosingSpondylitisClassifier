@@ -19,6 +19,7 @@ class SIJEnsemble(pl.LightningModule):
 
         num_classes = 1
         self.classifier = torch.nn.Linear(2 * num_classes, num_classes)
+        self.loss_fn = torch.nn.BCEWithLogitsLoss()
 
         self.save_hyperparameters(ignore=['modelA_params', 'modelB_params'])
 
@@ -37,10 +38,10 @@ class SIJEnsemble(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         x, y = batch
-        loss = torch.nn.BCEWithLogitsLoss(self.forward(x), y)
+        loss = torch.sigmoid(self.loss_fn(self.forward(x), y))
         return loss
 
     def test_step(self, batch, batch_idx):
         x, y = batch
-        loss = torch.nn.BCEWithLogitsLoss(self.forward(x), y)
+        loss = torch.sigmoid(self.loss_fn(self.forward(x), y))
         return loss

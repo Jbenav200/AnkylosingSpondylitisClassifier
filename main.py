@@ -37,14 +37,14 @@ if __name__ == '__main__':
     modelB.to(device)
 
     trainerA = pl.Trainer(accelerator='mps', max_epochs=50, enable_progress_bar=True, log_every_n_steps=1)
-    trainerA.fit(modelA, train_dataloaders=train_loader)
+    trainerA.fit(modelA, train_loader, val_loader)
     trainerB = pl.Trainer(accelerator='mps', max_epochs=50, enable_progress_bar=True, log_every_n_steps=1)
-    trainerB.fit(modelB, train_dataloaders=train_loader)
+    trainerB.fit(modelB, train_loader, val_loader)
     checkpoint_callback = set_model_checkpoint()
 
     model = SIJEnsemble(modelA.hparams, modelB.hparams, modelA.state_dict(), modelB.state_dict())
     trainer = pl.Trainer(accelerator='mps', max_epochs=50, callbacks=[checkpoint_callback], log_every_n_steps=1)
-    trainer.fit(model, train_dataloaders=train_loader)
+    trainer.fit(model, train_loader, val_loader)
 
     model_test = SIJEnsemble.load_from_checkpoint(checkpoint_callback.best_model_path, hparams_file=checkpoint_callback.best_model_path.split("checkpoints")[0]+"hparams.yaml")
 
