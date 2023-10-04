@@ -23,6 +23,7 @@ class SIJResNet(pl.LightningModule):
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-4)
         # self.optimizer = torch.optim.SGD(self.model.parameters(), lr=0.01)
         self.loss_fn = torch.nn.BCEWithLogitsLoss()
+        self.accuracy = torchmetrics.classification.Accuracy(task='binary')
         self.save_hyperparameters()
 
     def forward(self, data):
@@ -32,16 +33,20 @@ class SIJResNet(pl.LightningModule):
         mri, label = batch
         pred = self(mri)
         loss = torch.sigmoid(self.loss_fn(pred, label))
+        acc = self.accuracy(pred,label)
 
         self.log("Train Loss", loss)
+        self.log("Train Accuracy", acc)
         return loss
 
     def validation_step(self, batch, batch_idx):
         mri, label = batch
         pred = self(mri)
         loss = torch.sigmoid(self.loss_fn(pred, label))
+        acc = self.accuracy(pred,label)
 
         self.log("Val Loss", loss)
+        self.log("Val Accuracy", acc)
         return loss
 
     def configure_optimizers(self):

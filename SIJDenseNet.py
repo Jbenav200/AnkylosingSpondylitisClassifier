@@ -21,6 +21,7 @@ class SIJDenseNet(pl.LightningModule):
         self.model.classifier = torch.nn.Linear(in_features=1024, out_features=1, bias=True)
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-4)
         self.loss_fn = torch.nn.BCEWithLogitsLoss()
+        self.accuracy = torchmetrics.classification.Accuracy(task='binary')
         self.save_hyperparameters()
 
     def forward(self, data):
@@ -30,16 +31,20 @@ class SIJDenseNet(pl.LightningModule):
         mri, label = batch
         pred = self(mri)
         loss = torch.sigmoid(self.loss_fn(pred, label))
+        acc = self.accuracy(pred, label)
 
         self.log("Train Loss", loss)
+        self.log("Train Accuracy", acc)
         return loss
 
     def validation_step(self, batch, batch_idx):
         mri, label = batch
         pred = self(mri)
         loss = torch.sigmoid(self.loss_fn(pred, label))
+        acc = self.accuracy(pred, label)
 
         self.log("Val Loss", loss)
+        self.log("Val Accuracy", acc)
         return loss
 
     def configure_optimizers(self):

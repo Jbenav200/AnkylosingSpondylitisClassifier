@@ -1,5 +1,7 @@
 import pytorch_lightning as pl
 import torch.nn
+import torchmetrics.classification
+
 from SIJResNet import SIJResNet
 from SIJDenseNet import SIJDenseNet
 
@@ -20,6 +22,7 @@ class SIJEnsemble(pl.LightningModule):
         num_classes = 1
         self.classifier = torch.nn.Linear(2 * num_classes, num_classes)
         self.loss_fn = torch.nn.BCEWithLogitsLoss()
+        self.accuracy = torchmetrics.classification.Accuracy(task='binary')
 
         self.save_hyperparameters(ignore=['modelA_params', 'modelB_params'])
 
@@ -39,9 +42,14 @@ class SIJEnsemble(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch
         loss = torch.sigmoid(self.loss_fn(self.forward(x), y))
+        acc = self.accuracy(self.forward(x), y)
+        self.log("Train Accuracy", acc)
         return loss
 
     def test_step(self, batch, batch_idx):
         x, y = batch
         loss = torch.sigmoid(self.loss_fn(self.forward(x), y))
+        acc = self.accuracy(self.forward(x), y)
+
+        self.log("Test Accuracy", acc)
         return loss
