@@ -22,6 +22,7 @@ LABELS_PATH = os.getenv('LABELS_PATH')
 RESNET_LOG_PATH = os.getenv('RESNET_LOG_PATH')
 DENSENET_LOG_PATH = os.getenv('DENSENET_LOG_PATH')
 ENSEMBLE_LOG_PATH = os.getenv('ENSEMBLE_LOG_PATH')
+MODEL_SAVE_PATH = os.getenv('MODEL_SAVE_PATH')
 SAVED_ENSEMBLE_PATH = os.getenv('SAVED_ENSEMBLE_PATH')
 
 if __name__ == '__main__':
@@ -65,7 +66,8 @@ if __name__ == '__main__':
         #
         # # Print the DenseNet121 classifier metrics
         print_model_metrics(test_model_b, 'densenet model', device, val_dataset)
-        #
+
+        # train the SIJ Ensemble classifier
         model = SIJEnsemble(modelA, modelB, resnet_callback.best_model_path, densenet_callback.best_model_path)
         train_model(model, ENSEMBLE_LOG_PATH, ensemble_callback, train_loader, val_loader)
         #
@@ -74,7 +76,18 @@ if __name__ == '__main__':
         #
         # # print ensemble classifier metrics.
         print_model_metrics(model_test, 'ensemble classifier', device, val_dataset)
-    elif sys.argv[1] == 'validate':
+
+        if sys.argv[2] is not None and sys.argv[2] == 'save':
+            resnet = SIJResNet.load_from_checkpoint(resnet_callback.best_model_path)
+            resnet.to(device)
+            torch.save(resnet, MODEL_SAVE_PATH+'/resnet.pt')
+            densenet = SIJDenseNet.load_from_checkpoint(densenet_callback.best_model_path)
+            densenet.to(device)
+            torch.save(densenet, MODEL_SAVE_PATH+'/densenet.pt')
+            ensemble = SIJEnsemble.load_from_checkpoint(ensemble_callback.best_model_path)
+            ensemble.to(device)
+            torch.save(ensemble, MODEL_SAVE_PATH+'/ensemble.pt')
+    elif sys.argv[1] == 'results':
         try:
             ensemble = torch.load(SAVED_ENSEMBLE_PATH)
             ensemble.eval()

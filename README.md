@@ -4,10 +4,24 @@
 This project is the code for my dissertation project for my Master's of Science (MS) in Computer Science with Artificial Intelligence at the University of Wolverhampton.
 The original code was written in Jupyter and later converted to python files.
 
-## Setup Information
+## Running on your machine
+If you want to run this program on your machine, you'll need to follow these steps:
+1. Create your own .env file with the environment variables listed in main.py
+2. run the program initially from your command line:
+```
+python main.py train save
+```
+3. To show the results of the final ensemble classifier run the following from your command line:
+```
+python main.py results
+```
+
+Step 3 will print out in your terminal the accuracy, precision, recall and a confusion matrix.
+
+## System Information
 ### Device
-in main.py, I have set the device to 'mps' because I am using an M1 mac.
-If you are using a cuda compatible device, you will need to change lines 27, 46, 49 & 54 in main.py to use cuda instead of mps.
+In main.py, I have set the device to 'mps' because I am using an M1 mac.
+If you are using a cuda compatible device, you will need to change all mps references in main.py to use cuda instead.
 
 ### System Requirements
 Aside from the libraries imported in each of the files, you will need to have python 3.10 or higher to run this project.
