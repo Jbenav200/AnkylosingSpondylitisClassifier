@@ -7,7 +7,7 @@ The original code was written in Jupyter and later converted to python files.
 ## Setup Information
 ### Device
 in main.py, I have set the device to 'mps' because I am using an M1 mac.
-If you are using a cuda compatible device, you will need to change line 22 in main.py to use cuda instead of mps.
+If you are using a cuda compatible device, you will need to change line 27 in main.py to use cuda instead of mps.
 
 ### System Requirements
 Aside from the libraries imported in each of the files, you will need to have python 3.10 or higher to run this project.
