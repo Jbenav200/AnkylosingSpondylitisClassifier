@@ -14,7 +14,6 @@ class SIJEnsemble(pl.LightningModule):
         self.modelA.freeze()
         self.modelB.freeze()
 
-
         num_classes = 1
         self.classifier = torch.nn.Linear(2, num_classes)
         self.loss_fn = torch.nn.BCEWithLogitsLoss()
