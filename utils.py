@@ -5,12 +5,31 @@ import torch
 import torchmetrics
 from tqdm.notebook import tqdm
 from pytorch_lightning.loggers import TensorBoardLogger
+import functools
+import warnings
+from typing import Callable
+
+
+def ignore_warnings(category: Warning) -> object:
+    def ignore_warnings_decorator(func: Callable):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", category=category)
+                return func(*args, **kwargs)
+
+        return wrapper
+
+    return ignore_warnings_decorator
 
 
 def set_train_and_val_transforms():
     train_transforms = transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize(0.50, 0.67)
+        transforms.Normalize(0.50, 0.67),
+        transforms.RandomAffine(
+            degrees=(-5,5), translate=(0, 0.05), scale=(0.9, 1.1)),
+        transforms.RandomResizedCrop((224,224), scale=(0.35, 1))
     ])
 
     val_transforms = transforms.Compose([
@@ -40,7 +59,7 @@ def set_model_checkpoints():
         mode='min'
     )
 
-    return {'ensemble': ensemble_callback, 'resnet': resnet_callback, 'densenet': densenet_callback}
+    return resnet_callback, densenet_callback, ensemble_callback
 
 
 def compare_models(model1, model2):
@@ -65,7 +84,7 @@ def print_model_metrics(model, model_name, device, dataset):
     with torch.no_grad():
         for data, label in tqdm(dataset):
             data = data.to(device).float().unsqueeze(0)
-            pred = torch.sigmoid(model(data)[0]).cuda()
+            pred = torch.sigmoid(model(data)[0]).to(device)
             preds.append(pred)
             labels.append(label)
 
@@ -83,8 +102,9 @@ def print_model_metrics(model, model_name, device, dataset):
     print(f"Confusion Matrix {cm}")
 
 
+@ignore_warnings(category=UserWarning)
 def train_model(model, log_path, callback, train_loader, val_loader):
     model_trainer = pl.Trainer(accelerator='mps', max_epochs=50, logger=TensorBoardLogger(log_path),
-                               enable_progress_bar=True, log_every_n_steps=1,
+                               log_every_n_steps=1,
                                callbacks=[callback])
     model_trainer.fit(model, train_loader, val_loader)
