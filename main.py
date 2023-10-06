@@ -47,13 +47,13 @@ if __name__ == '__main__':
     train_model(modelA, RESNET_LOG_PATH, checkpoint_callbacks.resnet, train_loader, val_loader)
     train_model(modelB, DENSENET_LOG_PATH, checkpoint_callbacks.densenet, train_loader, val_loader)
 
-    test_model_a = SIJResNet.load_from_checkpoint(checkpoint_callbacks.resnet.best_model_path)
+    test_model_a = SIJResNet.load_from_checkpoint(checkpoint_callbacks.resnet_callback.best_model_path)
     test_model_a.eval()
 
     # Print the ResNet18 classifier metrics
     print_model_metrics(test_model_a, 'resnet model', device, val_dataset)
 
-    test_model_b = SIJDenseNet.load_from_checkpoint(checkpoint_callbacks.densenet.best_model.path)
+    test_model_b = SIJDenseNet.load_from_checkpoint(checkpoint_callbacks.densenet_callback.best_model.path)
     test_model_b.eval()
 
     # Print the DenseNet121 classifier metrics
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     model = SIJEnsemble(modelA, modelB)
     train_model(model, ENSEMBLE_LOG_PATH, checkpoint_callbacks.ensemble, train_loader, val_loader)
 
-    model_test = SIJEnsemble.load_from_checkpoint(checkpoint_callbacks.ensemble.best_model_path)
+    model_test = SIJEnsemble.load_from_checkpoint(checkpoint_callbacks.ensemble_callback.best_model_path)
     model_test.eval()
 
     # print ensemble classifier metrics.
