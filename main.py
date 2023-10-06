@@ -24,7 +24,6 @@ DENSENET_LOG_PATH = os.getenv('DENSENET_LOG_PATH')
 ENSEMBLE_LOG_PATH = os.getenv('ENSEMBLE_LOG_PATH')
 SAVED_ENSEMBLE_PATH = os.getenv('SAVED_ENSEMBLE_PATH')
 
-
 if __name__ == '__main__':
     # print('Program Started.')
     device = torch.device('mps' if torch.backends.mps.is_available() else 'cpu')
@@ -39,7 +38,8 @@ if __name__ == '__main__':
 
         train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, num_workers=num_workers,
                                                    shuffle=True)
-        val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, num_workers=num_workers, shuffle=False)
+        val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, num_workers=num_workers,
+                                                 shuffle=False)
 
         modelA = SIJResNet()
         modelA.to(device)
@@ -75,8 +75,11 @@ if __name__ == '__main__':
         # # print ensemble classifier metrics.
         print_model_metrics(model_test, 'ensemble classifier', device, val_dataset)
     elif sys.argv[1] == 'validate':
-        ensemble = torch.load(SAVED_ENSEMBLE_PATH)
-        ensemble.eval()
-        print_model_metrics(ensemble, 'ensemble classifier', device, val_dataset)
+        try:
+            ensemble = torch.load(SAVED_ENSEMBLE_PATH)
+            ensemble.eval()
+            print_model_metrics(ensemble, 'ensemble classifier', device, val_dataset)
+        except FileNotFoundError as e:
+            print(e)
     else:
         print('Argument passed was invalid')
