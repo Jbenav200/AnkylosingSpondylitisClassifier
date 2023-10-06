@@ -3,7 +3,7 @@ from Dataset import SIJDataset
 from SIJDenseNet import SIJDenseNet
 from SIJResNet import SIJResNet
 from SIJEnsemble import SIJEnsemble
-from utils import set_train_and_val_transforms, set_model_checkpoints, compare_models
+from utils import set_train_and_val_transforms, set_model_checkpoints, train_model, print_model_metrics
 import torch
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
@@ -43,17 +43,27 @@ if __name__ == '__main__':
     modelB.to(device)
 
     checkpoint_callbacks = set_model_checkpoints()
-    trainerA = pl.Trainer(accelerator='mps', max_epochs=50, logger=TensorBoardLogger(RESNET_LOG_PATH), enable_progress_bar=True, log_every_n_steps=1,
-                          callbacks=[checkpoint_callbacks.resnet])
-    trainerA.fit(modelA, train_loader, val_loader)
-    trainerB = pl.Trainer(accelerator='mps', max_epochs=50, logger=TensorBoardLogger(DENSENET_LOG_PATH), enable_progress_bar=True, log_every_n_steps=1,
-                          callbacks=[checkpoint_callbacks.densenet])
-    trainerB.fit(modelB, train_loader, val_loader)
+
+    train_model(modelA, RESNET_LOG_PATH, checkpoint_callbacks.resnet, train_loader, val_loader)
+    train_model(modelB, DENSENET_LOG_PATH, checkpoint_callbacks.densenet, train_loader, val_loader)
+
+    test_model_a = SIJResNet.load_from_checkpoint(checkpoint_callbacks.resnet.best_model_path)
+    test_model_a.eval()
+
+    # Print the ResNet18 classifier metrics
+    print_model_metrics(test_model_a, 'resnet model', device, val_dataset)
+
+    test_model_b = SIJDenseNet.load_from_checkpoint(checkpoint_callbacks.densenet.best_model.path)
+    test_model_b.eval()
+
+    # Print the DenseNet121 classifier metrics
+    print_model_metrics(test_model_b, 'densenet model', device, val_dataset)
 
     model = SIJEnsemble(modelA, modelB)
-    trainer = pl.Trainer(accelerator='mps', max_epochs=50, logger=TensorBoardLogger(ENSEMBLE_LOG_PATH),
-                         callbacks=[checkpoint_callbacks.ensemble], log_every_n_steps=1)
-    trainer.fit(model, train_loader, val_loader)
+    train_model(model, ENSEMBLE_LOG_PATH, checkpoint_callbacks.ensemble, train_loader, val_loader)
 
     model_test = SIJEnsemble.load_from_checkpoint(checkpoint_callbacks.ensemble.best_model_path)
     model_test.eval()
+
+    # print ensemble classifier metrics.
+    print_model_metrics(model_test, 'ensemble classifier', device, val_dataset)

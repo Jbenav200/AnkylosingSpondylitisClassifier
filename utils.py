@@ -1,4 +1,5 @@
 from torchvision import transforms
+import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
 import torch
 import torchmetrics
@@ -80,3 +81,10 @@ def print_model_metrics(model, model_name, device, dataset):
     print(f"{model_name} Val Precision {precision}")
     print(f"{model_name} Val Recall {recall}")
     print(f"Confusion Matrix {cm}")
+
+
+def train_model(model, log_path, callback, train_loader, val_loader):
+    model_trainer = pl.Trainer(accelerator='mps', max_epochs=50, logger=TensorBoardLogger(log_path),
+                               enable_progress_bar=True, log_every_n_steps=1,
+                               callbacks=[callback])
+    model_trainer.fit(model, train_loader, val_loader)
