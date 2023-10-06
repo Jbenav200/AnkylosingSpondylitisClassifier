@@ -44,8 +44,8 @@ if __name__ == '__main__':
 
     checkpoint_callbacks = set_model_checkpoints()
 
-    train_model(modelA, RESNET_LOG_PATH, checkpoint_callbacks.resnet, train_loader, val_loader)
-    train_model(modelB, DENSENET_LOG_PATH, checkpoint_callbacks.densenet, train_loader, val_loader)
+    train_model(modelA, RESNET_LOG_PATH, checkpoint_callbacks.resnet_callback, train_loader, val_loader)
+    train_model(modelB, DENSENET_LOG_PATH, checkpoint_callbacks.densenet_callback, train_loader, val_loader)
 
     test_model_a = SIJResNet.load_from_checkpoint(checkpoint_callbacks.resnet_callback.best_model_path)
     test_model_a.eval()
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     print_model_metrics(test_model_b, 'densenet model', device, val_dataset)
 
     model = SIJEnsemble(modelA, modelB)
-    train_model(model, ENSEMBLE_LOG_PATH, checkpoint_callbacks.ensemble, train_loader, val_loader)
+    train_model(model, ENSEMBLE_LOG_PATH, checkpoint_callbacks.ensemble_callback, train_loader, val_loader)
 
     model_test = SIJEnsemble.load_from_checkpoint(checkpoint_callbacks.ensemble_callback.best_model_path)
     model_test.eval()
