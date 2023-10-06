@@ -7,10 +7,10 @@ from SIJDenseNet import SIJDenseNet
 
 
 class SIJEnsemble(pl.LightningModule):
-    def __init__(self, ModelA=SIJResNet(), ModelB=SIJDenseNet()):
+    def __init__(self, modelA=SIJResNet(), modelB=SIJDenseNet()):
         super(SIJEnsemble, self).__init__()
-        self.modelA = ModelA
-        self.modelB = ModelB
+        self.modelA = modelA
+        self.modelB = modelB
         self.modelA.freeze()
         self.modelB.freeze()
 
