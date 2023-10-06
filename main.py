@@ -43,10 +43,10 @@ if __name__ == '__main__':
     modelB.to(device)
 
     checkpoint_callbacks = set_model_checkpoints()
-    trainerA = pl.Trainer(accelerator='mps', max_epochs=50, enable_progress_bar=True, log_every_n_steps=1,
+    trainerA = pl.Trainer(accelerator='mps', max_epochs=50, logger=TensorBoardLogger(RESNET_LOG_PATH), enable_progress_bar=True, log_every_n_steps=1,
                           callbacks=[checkpoint_callbacks.resnet])
     trainerA.fit(modelA, train_loader, val_loader)
-    trainerB = pl.Trainer(accelerator='mps', max_epochs=50, enable_progress_bar=True, log_every_n_steps=1,
+    trainerB = pl.Trainer(accelerator='mps', max_epochs=50, logger=TensorBoardLogger(DENSENET_LOG_PATH), enable_progress_bar=True, log_every_n_steps=1,
                           callbacks=[checkpoint_callbacks.densenet])
     trainerB.fit(modelB, train_loader, val_loader)
 
