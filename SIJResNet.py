@@ -40,10 +40,12 @@ class SIJResNet(pl.LightningModule):
 
         self.log("Train Loss", loss)
         self.log("Train Step Acc", self.train_acc(torch.sigmoid(pred), label.int()))
+        self.log("Train Step Precision", self.train_precision(self.forward(mri), label.int()))
+        self.log("Train Step Recall", self.train_recall(self.forward(mri), label.int()))
         return loss
 
     def on_train_epoch_end(self):
-        self.log("Train Acc", self.train_acc.compute())
+        self.log("Train Accuracy", self.train_acc.compute())
         self.log("Train Precision", self.train_precision.compute())
         self.log("Train Recall", self.train_recall.compute())
 
@@ -53,13 +55,15 @@ class SIJResNet(pl.LightningModule):
         loss = self.loss_fn(pred, label)
 
         self.log("Val Loss", loss)
-        self.log("Val Accuracy", self.val_acc(torch.sigmoid(pred), label.int()))
+        self.log("Val Step Accuracy", self.val_acc(torch.sigmoid(pred), label.int()))
+        self.log("Val Step Precision", self.val_precision(self.forward(mri), label.int()))
+        self.log("Val Step Recall", self.val_recall(self.forward(mri), label.int()))
         return loss
 
     def on_validation_epoch_end(self):
         self.log("Val Accuracy", self.val_acc.compute())
-        self.log("Val Precision", self.val_precision.compute())
-        self.log("Val Recall", self.val_recall.compute())
+        self.log("Val Precision", self.train_precision.compute())
+        self.log("Val Recall", self.train_recall.compute())
 
     def configure_optimizers(self):
         return [self.optimizer]

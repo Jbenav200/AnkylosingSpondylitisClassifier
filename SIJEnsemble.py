@@ -43,7 +43,9 @@ class SIJEnsemble(pl.LightningModule):
         loss = self.loss_fn(self.forward(x), y)
 
         self.log("Train Loss", loss)
-        self.log("Train Step Accuracy", self.train_accuracy(self.forward(x), y))
+        self.log("Train Step Accuracy", self.train_accuracy(self.forward(x), y.int()))
+        self.log("Train Precision", self.train_precision(self.forward(x), y.int()))
+        self.log("Train Recall", self.train_recall(self.forward(x), y.int()))
         return loss
 
     def on_train_epoch_end(self):
@@ -56,7 +58,9 @@ class SIJEnsemble(pl.LightningModule):
         loss = self.loss_fn(self.forward(x), y)
 
         self.log("Val Loss", loss)
-        self.log("Val Step Accuracy", self.val_accuracy(self.forward(x), y))
+        self.log("Val Step Accuracy", self.val_accuracy(self.forward(x), y.int()))
+        self.log("Val Precision", self.val_precision(self.forward(x), y.int()))
+        self.log("Val Recall", self.val_recall(self.forward(x), y.int()))
         return loss
 
     def on_validation_epoch_end(self):

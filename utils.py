@@ -28,8 +28,8 @@ def set_train_and_val_transforms():
         transforms.ToTensor(),
         transforms.Normalize(0.50, 0.67),
         transforms.RandomAffine(
-            degrees=(-5,5), translate=(0, 0.05), scale=(0.9, 1.1)),
-        transforms.RandomResizedCrop((224,224), scale=(0.35, 1))
+            degrees=(-5, 5), translate=(0, 0.05), scale=(0.9, 1.1)),
+        transforms.RandomResizedCrop((224, 224), scale=(0.35, 1), antialias=True)
     ])
 
     val_transforms = transforms.Compose([
@@ -37,7 +37,11 @@ def set_train_and_val_transforms():
         transforms.Normalize(0.50, 0.67)
     ])
 
-    return train_transforms, val_transforms
+    test_transforms = transforms.Compose([
+        transforms.ToTensor()
+    ])
+
+    return train_transforms, val_transforms, test_transforms
 
 
 def set_model_checkpoints():
@@ -48,12 +52,14 @@ def set_model_checkpoints():
     )
 
     resnet_callback = ModelCheckpoint(
+        dirpath='/Users/jonty/University/Dissertation/Python Projects/Dissertation/logs/resnet_logs',
         monitor='Val Loss',
         save_top_k=10,
         mode='min'
     )
 
     densenet_callback = ModelCheckpoint(
+        dirpath='/Users/jonty/University/Dissertation/Python Projects/Dissertation/logs/densenet_logs',
         monitor='Val Loss',
         save_top_k=10,
         mode='min'
@@ -96,9 +102,9 @@ def print_model_metrics(model, model_name, device, dataset):
     recall = torchmetrics.Recall(task='binary')(preds, labels)
     cm = torchmetrics.ConfusionMatrix(task='binary', num_classes=2)(preds, labels)
 
-    print(f"{model_name} Val Accuracy {acc}")
-    print(f"{model_name} Val Precision {precision}")
-    print(f"{model_name} Val Recall {recall}")
+    print(f"{model_name} Val Accuracy {format(acc, '.2f')}")
+    print(f"{model_name} Val Precision {format(precision, '.2f')}")
+    print(f"{model_name} Val Recall {format(recall, '.2f')}")
     print(f"Confusion Matrix {cm}")
 
 

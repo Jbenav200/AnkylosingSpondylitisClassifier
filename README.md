@@ -34,6 +34,11 @@ During the initial preprocessing of the data (not included in this repo) the dic
 
 ## Models and Libraries
 The libraries used to build, train and validate the models was PyTorch, TorchVision and PyTorch Lightning.
+Library versions used in this project:
+- pytorch==2.0.1
+- pytorch-lightning==2.0.9
+- torchvision==0.15.2
+
 The user documentation can be found at:
 <ol>
 <li><a href="https://pytorch.org/docs/stable/index.html" target="_blank">PyTorch docs</a></li>
