@@ -10,19 +10,6 @@ import warnings
 from typing import Callable
 
 
-def ignore_warnings(category: Warning) -> object:
-    def ignore_warnings_decorator(func: Callable):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore", category=category)
-                return func(*args, **kwargs)
-
-        return wrapper
-
-    return ignore_warnings_decorator
-
-
 def set_train_and_val_transforms():
     train_transforms = transforms.Compose([
         transforms.ToTensor(),
@@ -102,13 +89,12 @@ def print_model_metrics(model, model_name, device, dataset):
     recall = torchmetrics.Recall(task='binary')(preds, labels)
     cm = torchmetrics.ConfusionMatrix(task='binary', num_classes=2)(preds, labels)
 
-    print(f"{model_name} Val Accuracy {format(acc, '.2f')}")
-    print(f"{model_name} Val Precision {format(precision, '.2f')}")
-    print(f"{model_name} Val Recall {format(recall, '.2f')}")
+    print(f"{model_name} Test Accuracy {format(acc, '.2f')}")
+    print(f"{model_name} Test Precision {format(precision, '.2f')}")
+    print(f"{model_name} Test Recall {format(recall, '.2f')}")
     print(f"Confusion Matrix {cm}")
 
 
-@ignore_warnings(category=UserWarning)
 def train_model(model, log_path, callback, train_loader, val_loader):
     model_trainer = pl.Trainer(accelerator='mps', max_epochs=50, logger=TensorBoardLogger(log_path),
                                log_every_n_steps=1,
